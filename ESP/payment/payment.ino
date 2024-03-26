@@ -23,10 +23,21 @@ PubSubClient client(espClient);
 volatile int hz = 10;
 unsigned long previousButtonPressMillis = 0;
 unsigned long buttonDelay = 1000; // Delay between button presses (in milliseconds)
+unsigned long ledDuration = 5000; // Duration for LED action (Full on/blink) (in milliseconds)
+unsigned long blinkDelay = 200; // Duration of delay between blinks (in milliseconds)
 unsigned long previousLightMillis = 0;
+unsigned long previousLightToggleMillis = 0;
 unsigned long currentMillis = 0;
 
 const char *nim = "13520040";
+
+enum PaymentState {
+  IDLE,
+  REQUEST_SENT,
+  PAYMENT_SUCCESS,
+  PAYMENT_FAILED
+};
+PaymentState paymentState = IDLE;
 
 void setup() {
   // Set pin mode
@@ -73,6 +84,33 @@ void loop() {
     sendPaymentRequest();
   }
 
+  // Handle LED State based on PaymentState
+  handleLED();
+
+}
+
+void handleLED(){
+  // Handle LED state
+  switch (paymentState) {
+    case PAYMENT_SUCCESS:
+      if (currentMillis - previousLightMillis >= ledDuration) {
+        digitalWrite(LED, LOW);
+        paymentState = IDLE;
+      }
+      break;
+    case PAYMENT_FAILED:
+      if (currentMillis - previousLightToggleMillis >= blinkDelay) {
+        digitalWrite(LED, !digitalRead(LED));
+        previousLightToggleMillis = currentMillis;
+      }
+      if (currentMillis - previousLightMillis >= ledDuration) {
+        digitalWrite(LED, LOW);
+        paymentState = IDLE;
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 void sendPaymentRequest(){
@@ -90,13 +128,17 @@ void callback(char *topic, byte *payload, unsigned int length) {
     message += (char)payload[i];
   }
 
+  digitalWrite(LED, HIGH); // Turn on LED
+  previousLightMillis = currentMillis;
+
   // Handle messages based on topic
   if (strcmp(topic, "iot/success") == 0) {
     Serial.println("Payment successful");
+    paymentState = PAYMENT_SUCCESS;
   } else if (strcmp(topic, "iot/failed") == 0) {
     Serial.println("Payment failed");
+    paymentState = PAYMENT_FAILED;
   }
-  Serial.println(message);
 }
 
 void reconnect() {
