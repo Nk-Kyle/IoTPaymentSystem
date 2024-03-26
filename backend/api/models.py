@@ -16,13 +16,13 @@ class BaseModel(models.Model):
 
 
 class User(BaseModel):
-    nim = models.CharField(max_length=10)
+    uid = models.CharField(max_length=10)
     balance = models.IntegerField(default=BASE_BALANCE)
 
     def __str__(self):
-        return self.nim
+        return self.uid
 
 
 class TransactionLog(BaseModel):
-    nim = models.CharField(max_length=10)
+    uid = models.CharField(max_length=10)
     amount = models.IntegerField()

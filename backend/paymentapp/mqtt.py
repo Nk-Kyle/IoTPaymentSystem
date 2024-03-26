@@ -12,9 +12,9 @@ def on_message(client, userdata, msg):
 
     topic = msg.topic
     payload = msg.payload.decode("utf-8")
-    nim = payload
+    uid = payload
     if topic in ["iot/topup", "iot/deduct"]:
-        transaction = Transaction(nim)
+        transaction = Transaction(uid)
         if topic == "iot/topup":
             transaction.topup(int(DEDUCT_AMOUNT))
         elif topic == "iot/deduct":

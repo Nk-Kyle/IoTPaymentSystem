@@ -6,9 +6,9 @@ from paymentapp import mqtt
 
 class Transaction:
 
-    def __init__(self, nim):
-        self.nim = nim
-        self.user = User.objects.get_or_create(nim=nim)[0]
+    def __init__(self, uid):
+        self.uid = uid
+        self.user = User.objects.get_or_create(uid=uid)[0]
 
     def deduct(self, amount):
 
@@ -16,7 +16,7 @@ class Transaction:
             # Publish to MQTT
             mqtt.client.publish(
                 "iot/failed",
-                f"Insufficient balance for {self.nim} to deduct {amount}. Balance: {self.user.balance}",
+                f"Insufficient balance for {self.uid} to deduct {amount}. Balance: {self.user.balance}",
             )
             return
 
@@ -27,7 +27,7 @@ class Transaction:
 
         # Publish to MQTT
         mqtt.client.publish(
-            "iot/success", f"Successfully deducted {amount} for {self.nim}"
+            "iot/success", f"Successfully deducted {amount} for {self.uid}"
         )
 
     def topup(self, amount):
@@ -37,4 +37,4 @@ class Transaction:
             self.create_log(amount)
 
     def create_log(self, amount):
-        TransactionLog.objects.create(nim=self.nim, amount=amount)
+        TransactionLog.objects.create(uid=self.uid, amount=amount)
