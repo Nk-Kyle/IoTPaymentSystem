@@ -128,4 +128,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MQTT = {
     "SERVER": "192.168.0.106",
     "PORT": 1884,
+    "USERNAME": "user",
+    "PASSWORD": "iot2024",
 }

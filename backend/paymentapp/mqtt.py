@@ -1,4 +1,5 @@
 from django.conf import settings
+from constants import DEDUCT_AMOUNT
 import paho.mqtt.client as mqtt
 
 
@@ -11,16 +12,17 @@ def on_message(client, userdata, msg):
 
     topic = msg.topic
     payload = msg.payload.decode("utf-8")
-    nim, amount = payload.split(",")
+    nim = payload
     transaction = Transaction(nim)
     if topic == "iot/topup":
-        transaction.topup(int(amount))
+        transaction.topup(int(DEDUCT_AMOUNT))
     elif topic == "iot/deduct":
-        transaction.deduct(int(amount))
+        transaction.deduct(int(DEDUCT_AMOUNT))
 
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
+client.username_pw_set(settings.MQTT["USERNAME"], settings.MQTT["PASSWORD"])
 
 client.connect(settings.MQTT["SERVER"], settings.MQTT["PORT"], 60)

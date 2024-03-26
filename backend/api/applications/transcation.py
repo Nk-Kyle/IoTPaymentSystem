@@ -1,6 +1,8 @@
 from api.models import User, TransactionLog
 from django.db import transaction
 
+from paymentapp import mqtt
+
 
 class Transaction:
 
@@ -13,6 +15,10 @@ class Transaction:
         with transaction.atomic():
             self.user.save()
             self.create_log(-amount)
+        print("Deducted")
+
+        # Publish to MQTT
+        mqtt.client.publish("iot/success", f"{self.nim} {amount}")
 
     def topup(self, amount):
         self.user.balance += amount
