@@ -1,0 +1,3 @@
+NIM = "13520040"
+
+BASE_BALANCE = int(NIM[-3:]) + 100000
