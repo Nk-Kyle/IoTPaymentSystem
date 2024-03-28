@@ -1,26 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment, ReactNode } from "react";
 import mqttClient from "./mqttListener";
 
 const MQTT_TOPIC_SUCCESS = 'iot/success';
 const MQTT_TOPIC_FAILURE = 'iot/failed';
 
 export default function Home(): JSX.Element {
-  const [welcomeMessage, setWelcomeMessage] = useState<string>("Welcome to Payment Merchant - V1");
+  const [welcomeMessage, setWelcomeMessage] = useState<ReactNode>("Welcome to Payment Merchant - V1");
   const [status, setStatus] = useState<string>("");
 
   useEffect(() => {
     const handleNewMessage = (topic: string, message: Buffer) => {
+      const messageString = message.toString();
+      const messageParts = messageString.split('\n').map((part, index) => 
+        <Fragment key={index}>{part}<br /></Fragment>
+      );
+
       if (topic === MQTT_TOPIC_SUCCESS) {
-        setWelcomeMessage(`Payment Successful: ${message.toString()}`);
+        setWelcomeMessage(<><span style={{color: 'green'}}>{`Payment Successful: `}<br /></span>{messageParts}</>);
         setStatus("success");
         setTimeout(() => {
           setWelcomeMessage("Welcome to Payment Merchant - V1");
           setStatus("");
         }, 5000);
       } else if (topic === MQTT_TOPIC_FAILURE) {
-        setWelcomeMessage(`Payment Failed: ${message.toString()}`);
+        setWelcomeMessage(<><span style={{color: 'red'}}>{`Payment Failed: `}<br /></span>{messageParts}</>);
         setStatus("failure");
         setTimeout(() => {
           setWelcomeMessage("Welcome to Payment Merchant - V1");

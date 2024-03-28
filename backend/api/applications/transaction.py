@@ -16,7 +16,7 @@ class Transaction:
             # Publish to MQTT
             mqtt.client.publish(
                 "iot/failed",
-                f"Insufficient balance for {self.uid} to deduct {amount}. Balance: {self.user.balance}",
+                f"Insufficient balance for {self.uid} to deduct {amount}\nBalance: {self.user.balance}",
             )
             return
 
@@ -28,7 +28,7 @@ class Transaction:
         # Publish to MQTT
         mqtt.client.publish(
             "iot/success",
-            f"Successfully deducted {amount} for {self.uid}. Balance: {self.user.balance}",
+            f"Successfully deducted {amount} for {self.uid}\nBalance: {self.user.balance}",
         )
 
     def topup(self, amount):
