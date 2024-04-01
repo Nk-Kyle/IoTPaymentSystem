@@ -10,7 +10,7 @@ const char *ssid = "LT2";
 const char *password = "Kyle02Treoxer";
 
 // MQTT Broker
-const char *mqtt_server = "192.168.0.106"; 
+const char *mqtt_server = "192.168.0.111"; 
 const char *mqtt_topic = "iot/#";
 const int mqtt_port = 1884;
 const char *mqtt_user = "user";
