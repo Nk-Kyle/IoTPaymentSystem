@@ -23,7 +23,7 @@ class Transaction:
         self.user.balance -= amount
         with transaction.atomic():
             self.user.save()
-            self.create_log(-amount)
+            self.create_log(amount)
 
         # Publish to MQTT
         mqtt.client.publish(
@@ -35,7 +35,11 @@ class Transaction:
         self.user.balance += amount
         with transaction.atomic():
             self.user.save()
-            self.create_log(amount)
+            self.create_log(amount, TransactionLog.TransactionType.TOPUP)
 
-    def create_log(self, amount):
-        TransactionLog.objects.create(uid=self.uid, amount=amount)
+    def create_log(
+        self, amount, transaction_type=TransactionLog.TransactionType.DEDUCT
+    ):
+        TransactionLog.objects.create(
+            uid=self.uid, amount=amount, transaction_type=transaction_type
+        )

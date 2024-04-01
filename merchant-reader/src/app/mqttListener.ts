@@ -1,6 +1,6 @@
 import mqtt, { MqttClient } from 'mqtt';
 
-const MQTT_BROKER = 'ws://192.168.0.106';
+const MQTT_BROKER = 'ws://192.168.0.111';
 const MQTT_PORT = 8080;
 const MQTT_TOPIC_SUCCESS = 'iot/success';
 const MQTT_TOPIC_FAILURE = 'iot/failed';

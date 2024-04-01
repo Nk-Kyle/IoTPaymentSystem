@@ -17,6 +17,7 @@ class BaseModel(models.Model):
 
 class User(BaseModel):
     uid = models.CharField(max_length=10)
+    password = models.CharField(max_length=10)
     balance = models.IntegerField(default=BASE_BALANCE)
 
     def __str__(self):
@@ -24,5 +25,13 @@ class User(BaseModel):
 
 
 class TransactionLog(BaseModel):
+    class TransactionType(models.TextChoices):
+        TOPUP = "TOPUP"
+        DEDUCT = "DEDUCT"
+
     uid = models.CharField(max_length=10)
     amount = models.IntegerField()
+    transaction_type = models.CharField(max_length=10, choices=TransactionType.choices)
+
+    class Meta:
+        ordering = ["-created_at"]

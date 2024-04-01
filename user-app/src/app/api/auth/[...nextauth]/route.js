@@ -10,9 +10,28 @@ export const authOptions = {
             async authorize(credentials) {
                 const { nim, password } = credentials;
 
-                let user = null;
-                user = { email: nim, password };
-                console.log(user);
+                // Fetch user from backend
+                let user = { email: nim, password: password };
+
+                const res = await fetch(
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/login/",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            uid: nim,
+                            password,
+                        }),
+                    }
+                );
+
+                if (res.status !== 200) {
+                    throw new Error("Invalid credentials");
+                }
+
+                // Return user object
                 return user;
             },
         }),

@@ -1,3 +1,40 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.views import View
 
-# Create your views here.
+from api.models import User
+from api.applications.user import get_user_info
+from django.contrib.auth.hashers import check_password
+from django.views.decorators.csrf import csrf_exempt
+
+from django.utils.decorators import method_decorator
+
+import json
+
+# class based view
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LoginView(View):
+    def post(self, request):
+        # Get JSON data from request
+        data = request.body
+        data = json.loads(data)
+        uid = data.get("uid")
+        password = data.get("password")
+
+        # password was hashed with make_password
+        user = User.objects.filter(uid=uid).first()
+        if not user:
+            return JsonResponse({"status": "failed", "message": "Invalid account"})
+
+        if user and check_password(password, user.password):
+            return JsonResponse({"status": "success", "balance": user.balance})
+        return JsonResponse({"status": "failed", "message": "Invalid credentials"})
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class InfoView(View):
+    def get(self, request):
+        uid = request.GET.get("uid")
+        user_info = get_user_info(uid)
+        return JsonResponse(user_info)
