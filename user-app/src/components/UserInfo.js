@@ -32,9 +32,57 @@ const TransactionHistory = () => {
         }
     }, [session]); // Add session as a dependency
 
-    const handleTopUp = () => {
-        // Implement your top-up logic here
-        console.log("Top-up button clicked");
+    useEffect(() => {
+        const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+        const clientKey = process.env.NEXT_PUBLIC_CLIENT;
+        const script = document.createElement("script");
+
+        script.src = snapScript;
+        script.setAttribute("data-client-key", clientKey);
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    const handleTopUp = (amount) => {
+        const data = {
+            id: userInfo?.nim + Date.now(),
+            amount: amount,
+        };
+
+        fetch(process.env.NEXT_PUBLIC_NGROK_URL + "/api/tokenizer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => res.json())
+            .then((data_json) => {
+                const { token } = data_json;
+                window.snap.pay(token, {
+                    onSuccess: function (result) {
+                        // Post to backend
+                        fetch(
+                            process.env.NEXT_PUBLIC_BACKEND_URL + "/api/topup/",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    uid: session?.user?.email,
+                                    amount: data.amount,
+                                }),
+                            }
+                        );
+                    },
+                });
+            });
     };
 
     const handleLogout = () => {
@@ -65,10 +113,22 @@ const TransactionHistory = () => {
 
             <div className="flex justify-center mb-4">
                 <button
-                    onClick={handleTopUp}
+                    onClick={() => handleTopUp(20000)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105" // Added styles for transition and hover effect
                 >
-                    Top-Up
+                    Top-Up 20k
+                </button>
+                <button
+                    onClick={() => handleTopUp(50000)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 ml-4" // Added styles for transition and hover effect
+                >
+                    Top-Up 50k
+                </button>
+                <button
+                    onClick={() => handleTopUp(100000)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 ml-4" // Added styles for transition and hover effect
+                >
+                    Top-Up 100k
                 </button>
             </div>
 

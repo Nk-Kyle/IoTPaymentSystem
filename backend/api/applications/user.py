@@ -6,7 +6,11 @@ def get_user_info(uid):
     history = TransactionLog.objects.filter(uid=uid)
     history = [
         {
-            "amount": log.amount if log.transaction_type == 1 else -log.amount,
+            "amount": (
+                log.amount
+                if log.transaction_type == TransactionLog.TransactionType.TOPUP
+                else -log.amount
+            ),
             "time": log.created_at.strftime("%d-%m-%Y, %H:%M:%S"),
         }
         for log in history

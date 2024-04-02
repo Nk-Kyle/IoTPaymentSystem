@@ -3,6 +3,7 @@ from django.views import View
 
 from api.models import User
 from api.applications.user import get_user_info
+from api.applications.transaction import Transaction
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
 
@@ -38,3 +39,22 @@ class InfoView(View):
         uid = request.GET.get("uid")
         user_info = get_user_info(uid)
         return JsonResponse(user_info)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class TopUpView(View):
+    def post(self, request):
+        data = request.body
+        data = json.loads(data)
+        uid = data.get("uid")
+        amount = data.get("amount")
+
+        user = User.objects.filter(uid=uid).first()
+        if not user:
+            return JsonResponse({"status": "failed", "message": "Invalid account"})
+
+        transaction = Transaction(uid)
+        transaction.topup(amount)
+
+        user = User.objects.get(uid=uid)
+        return JsonResponse({"status": "success", "balance": user.balance})

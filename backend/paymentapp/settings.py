@@ -131,7 +131,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # MQTT Broker
 MQTT = {
-    "SERVER": "192.168.0.111",
+    "SERVER": "192.168.0.114",
     "PORT": 1884,
     "USERNAME": "user",
     "PASSWORD": "iot2024",
