@@ -1,4 +1,5 @@
 from api.models import User, TransactionLog
+from datetime import timedelta
 
 
 def get_user_info(uid):
@@ -11,7 +12,9 @@ def get_user_info(uid):
                 if log.transaction_type == TransactionLog.TransactionType.TOPUP
                 else -log.amount
             ),
-            "time": log.created_at.strftime("%d-%m-%Y, %H:%M:%S"),
+            "time": (log.created_at + timedelta(hours=7)).strftime(
+                "%d-%m-%Y, %H:%M:%S"
+            ),
         }
         for log in history
     ]
