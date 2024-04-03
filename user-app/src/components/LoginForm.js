@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-    const [nim, setNim] = useState("");
+    const [uid, setUid] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
@@ -17,7 +17,7 @@ export default function LoginForm() {
 
         try {
             const res = await signIn("credentials", {
-                nim,
+                uid,
                 password,
                 redirect: false,
             });
@@ -41,13 +41,13 @@ export default function LoginForm() {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div>
                         <label
-                            htmlFor="nim"
+                            htmlFor="uid"
                             className="block mb-2 text-sm font-medium text-gray-900"
                         >
                             Your ID
                         </label>
                         <input
-                            onChange={(e) => setNim(e.target.value)}
+                            onChange={(e) => setUid(e.target.value)}
                             type="text"
                             placeholder="13520XXX"
                             className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"

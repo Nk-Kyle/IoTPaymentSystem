@@ -8,10 +8,10 @@ export const authOptions = {
             credentials: {},
 
             async authorize(credentials) {
-                const { nim, password } = credentials;
+                const { uid, password } = credentials;
 
                 // Fetch user from backend
-                let user = { email: nim, password: password };
+                let user = { email: uid, password: password };
 
                 const res = await fetch(
                     process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/login/",
@@ -21,7 +21,7 @@ export const authOptions = {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            uid: nim,
+                            uid,
                             password,
                         }),
                     }

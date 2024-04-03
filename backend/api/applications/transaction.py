@@ -8,9 +8,18 @@ class Transaction:
 
     def __init__(self, uid):
         self.uid = uid
-        self.user = User.objects.get_or_create(uid=uid)[0]
+        self.user = User.objects.filter(uid=uid).first()
 
     def deduct(self, amount):
+
+        if not self.user:
+            self.user = User.objects.create(uid=self.uid)
+            mqtt.client.publish(
+                "iot/created",
+                f"User {self.uid} created with balance {self.user.balance}",
+            )
+
+            return
 
         if self.user.balance < amount:
             # Publish to MQTT

@@ -4,6 +4,7 @@ const MQTT_BROKER = 'ws://192.168.0.111';
 const MQTT_PORT = 8080;
 const MQTT_TOPIC_SUCCESS = 'iot/success';
 const MQTT_TOPIC_FAILURE = 'iot/failed';
+const MQTT_TOPIC_CREATE = 'iot/created'; // New user created
 const MQTT_USERNAME = 'user'; 
 const MQTT_PASSWORD = 'iot2024';
 
@@ -28,6 +29,13 @@ client.on('connect', () => {
             console.error('Failed to subscribe to topic:', err);
         }
     });
+
+    client.subscribe(MQTT_TOPIC_CREATE, (err) => {
+        if (err) {
+            console.error('Failed to subscribe to topic:', err);
+        }
+    });
+
 
 });
 

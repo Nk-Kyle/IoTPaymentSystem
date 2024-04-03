@@ -19,7 +19,7 @@ def get_user_info(uid):
         return {
             "status": "success",
             "balance": user.balance,
-            "nim": user.uid,
+            "uid": user.uid,
             "history": history,
         }
     return {"status": "failed", "message": "User not found"}

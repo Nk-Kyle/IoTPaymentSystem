@@ -34,8 +34,6 @@ unsigned long previousLightMillis = 0;
 unsigned long previousLightToggleMillis = 0;
 unsigned long currentMillis = 0;
 
-const char *nim = "13520040";
-
 enum PaymentState
 {
   IDLE,
@@ -50,7 +48,6 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 void setup()
 {
   // Set pin mode
-  pinMode(BUTTON, INPUT);
   pinMode(LED, OUTPUT);
   Serial.begin(115200);
 

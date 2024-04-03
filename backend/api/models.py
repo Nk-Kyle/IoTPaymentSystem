@@ -4,7 +4,7 @@ from django.db import models
 from django.db import models
 from constants import BASE_BALANCE
 
-# Create your models here.
+from django.contrib.auth.hashers import make_password
 
 
 class BaseModel(models.Model):
@@ -17,7 +17,7 @@ class BaseModel(models.Model):
 
 class User(BaseModel):
     uid = models.CharField(max_length=10)
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=255, default=make_password("password"))
     balance = models.IntegerField(default=BASE_BALANCE)
 
     def __str__(self):

@@ -5,6 +5,7 @@ import mqttClient from "./mqttListener";
 
 const MQTT_TOPIC_SUCCESS = 'iot/success';
 const MQTT_TOPIC_FAILURE = 'iot/failed';
+const MQTT_TOPIC_CREATE = 'iot/created'; // New user created
 
 export default function Home(): JSX.Element {
   const [welcomeMessage, setWelcomeMessage] = useState<ReactNode>("Welcome to Payment Merchant - V1");
@@ -27,6 +28,14 @@ export default function Home(): JSX.Element {
       } else if (topic === MQTT_TOPIC_FAILURE) {
         setWelcomeMessage(<><span style={{color: 'red'}}>{`Payment Failed: `}<br /></span>{messageParts}</>);
         setStatus("failure");
+        setTimeout(() => {
+          setWelcomeMessage("Welcome to Payment Merchant - V1");
+          setStatus("");
+        }, 5000);
+      }
+      else if (topic === MQTT_TOPIC_CREATE) {
+        setWelcomeMessage(<><span style={{color: 'blue'}}>{`New User Created: `}<br /></span>{messageParts}</>);
+        setStatus("success");
         setTimeout(() => {
           setWelcomeMessage("Welcome to Payment Merchant - V1");
           setStatus("");

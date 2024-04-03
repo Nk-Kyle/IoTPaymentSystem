@@ -50,7 +50,7 @@ const TransactionHistory = () => {
 
     const handleTopUp = (amount) => {
         const data = {
-            id: userInfo?.nim + Date.now(),
+            id: userInfo?.uid + Date.now(),
             amount: amount,
         };
 
@@ -104,7 +104,7 @@ const TransactionHistory = () => {
 
             <div className="mb-8">
                 <p className="text-2xl font-semibold text-center">
-                    Welcome, {userInfo?.nim}
+                    Welcome, {userInfo?.uid}
                 </p>
                 <p className="text-2xl font-semibold text-center">
                     Balance: IDR {userInfo?.balance}
