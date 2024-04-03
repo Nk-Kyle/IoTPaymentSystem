@@ -34,8 +34,8 @@ export default function Home(): JSX.Element {
         }, 5000);
       }
       else if (topic === MQTT_TOPIC_CREATE) {
-        setWelcomeMessage(<><span style={{color: 'blue'}}>{`New User Created: `}<br /></span>{messageParts}</>);
-        setStatus("success");
+        setWelcomeMessage(<><span style={{color: 'aqua'}}>{`New User Created: `}<br /></span>{messageParts}</>);
+        setStatus("created");
         setTimeout(() => {
           setWelcomeMessage("Welcome to Payment Merchant - V1");
           setStatus("");
@@ -66,6 +66,9 @@ export default function Home(): JSX.Element {
       </div>}
       {status === "failure" && <div className="mt-8 flex justify-center">
         <div className="w-10 h-10 bg-red-500 rounded-full animate-bounce delay-1000"></div>
+      </div>}
+      {status === "created" && <div className="mt-8 flex justify-center">
+        <div className="w-10 h-10 bg-cyan-500 rounded-full animate-bounce delay-1000"></div>
       </div>}
       {status === "" && <p className="mt-4 text-center text-lg font-bold">
         <span className="animate-pulse">Waiting for payment...</span>
