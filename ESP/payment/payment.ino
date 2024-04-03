@@ -89,9 +89,6 @@ void loop()
   // Update currentMillis
   currentMillis = millis();
 
-  // Read button state
-  int PushBtnState = digitalRead(BUTTON);
-
   // Handle LED State based on PaymentState
   handleLED();
 
