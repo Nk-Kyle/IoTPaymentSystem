@@ -26,11 +26,15 @@ class LoginView(View):
         # password was hashed with make_password
         user = User.objects.filter(uid=uid).first()
         if not user:
-            return JsonResponse({"status": "failed", "message": "Invalid account"})
+            return JsonResponse(
+                {"status": "failed", "message": "Invalid account"}, status=401
+            )
 
         if user and check_password(password, user.password):
             return JsonResponse({"status": "success", "balance": user.balance})
-        return JsonResponse({"status": "failed", "message": "Invalid credentials"})
+        return JsonResponse(
+            {"status": "failed", "message": "Invalid credentials"}, status=401
+        )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
